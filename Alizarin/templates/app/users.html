@@ -1,0 +1,63 @@
+{% extends 'app/layout/default.html' %}
+
+{% block title %}Manage users{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/app/projects.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app/projects.css') }}">
+{% endblock %}
+
+{% block header %}Manage users{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            Manage project users
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">User ID</th>
+                    <th scope="col">First name</th>
+                    <th scope="col">Last name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Remove</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for u in active_project.users %}
+                    <tr>
+                        <td>{{ u.user_id }}</td>
+                        <td>{{ u.first_name }}</td>
+                        <td>{{ u.last_name }}</td>
+                        <td>{{ u.email }}</td>
+                        <td>
+                            <a href="{{ url_for('user_remove', project_id=active_project.project_id, user_id=u.user_id) }}"
+                               class="btn btn-close mb-1" role="button"
+                               aria-label="Close"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row my-4">
+        <form method="POST" action="{{ url_for('user_add', project_id=active_project.project_id) }}">
+            {{ user_form.email.label(class_="mb-2") }}
+            {{ user_form.email(class_="form-control", placeholder_="Add user to project") }}
+            {% if user_form.email.errors %}
+                <ul class="errors">
+                    {% for error in user_form.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {{ user_form.submit(class_="btn btn-lg btn-outline-primary btn-block my-4") }}
+        </form>
+    </div>
+{% endblock %}

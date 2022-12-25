@@ -1,0 +1,7 @@
+[contenteditable][placeholder]:empty:before {
+    white-space: pre;
+    content: attr(placeholder);
+    position: absolute;
+    color: gray;
+    background-color: transparent;
+}

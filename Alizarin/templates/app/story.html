@@ -1,0 +1,61 @@
+{% extends 'app/layout/default.html' %}
+
+{% block title %}User stories{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/app/projects.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app/projects.css') }}">
+{% endblock %}
+
+{% block header %}User stories{% endblock %}
+
+{% block content %}
+    {% if active_project.stories|length > 0 %}
+        <div class="row mt-3 mb-3">
+            <div class="col-8">
+                <h3>User stories - {{ active_project.name }}</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for s in active_project.stories %}
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-header">
+                             <a href="{{ url_for('story_delete', project_id=active_project.project_id, story_id=s.story_id) }}"
+                                               class="btn btn-close float-end mb-1" role="button"
+                                               aria-label="Close"></a>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">{{ s.content }}</div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-header">User stories</div>
+            <div class="card-body">
+                <p class="card-text">No user stories for this project</p>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row my-4">
+        <form method="POST" action="{{ url_for('story_add', project_id=active_project.project_id) }}">
+            {{ user_story.content.label(class_="mb-2") }}
+            {{ user_story.content(class_="form-control", placeholder_="Add user story") }}
+            {% if user_story.content.errors %}
+                <ul class="errors">
+                    {% for error in user_story.content.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {{ user_story.submit(class_="btn btn-lg btn-outline-primary btn-block my-4") }}
+        </form>
+    </div>
+{% endblock %}

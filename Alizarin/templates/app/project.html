@@ -1,0 +1,94 @@
+{% extends 'app/layout/default.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/app/projects.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app/projects.css') }}">
+{% endblock %}
+
+{% block header %}Dashboard{% endblock %}
+
+{% block content %}
+    {% if active_project is not none %}
+        <div class="row m-3">
+            <div class="col-12">
+                <h3>Project - {{ active_project.name }}
+                    <a href="{{ url_for('project', project_id=active_project.project_id, sort=next_sort) }}"
+                       class="btn float-end mb-2 mt-0 p-0 fs-4"  role="button"
+                       aria-label="Shuffle">Sort by {{ next_sort }}
+                        <i class="fa-solid fa-shuffle"></i>
+                    </a>
+                </h3>
+
+            </div>
+        </div>
+        {% for sprint in active_project.sprints %}
+            <div class="card m-3">
+                <div class="card-header">
+                    {{ sprint.name }} - {{ sprint.created_at|strftime }}
+                    <a href="{{ url_for('sprint_delete', project_id=active_project.project_id, sprint_id=sprint.sprint_id) }}"
+                       class="btn btn-close float-end mb-1" role="button"
+                       aria-label="Close"></a>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-stretch">
+                        {% for task in sprint.tasks %}
+                            <div class="col-2 py-2">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ task.name }}
+                                            <a href="{{ url_for('task_delete', project_id=active_project.project_id, task_id=task.task_id) }}"
+                                               class="btn btn-close float-end mb-1" role="button"
+                                               aria-label="Close"></a>
+                                        </h5>
+                                        <p class="card-text">{{ task.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="col-2 py-2">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <form class="form-inline" id="task-add" name="taskadd"
+                                          action="{{ url_for("task_add", project_id=active_project.project_id, sprint_id=sprint.sprint_id) }}"
+                                          method=post>
+                                        <h5 class="card-title">
+                                            {{ task_form.name(class_="form-control form-control-sm", placeholder_="Task name") }}
+                                        </h5>
+                                        <div class="card-text">
+                                            <div id="editable-description" contenteditable="true"
+                                                 class="form-control d-inline-block"
+                                                 aria-multiline="true" placeholder="Description"></div>
+                                        </div>
+                                        {{ task_form.description(class_="d-none") }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="row m-3">
+            <div class="w-100 p-0 m-0">
+                <form id="sprint-add" name="sprintadd"
+                      action="{{ url_for("sprint_add", project_id=active_project.project_id) }}" method=post>
+                    {{ sprint_form.name(class_="form-control", placeholder_="Create a new sprint") }}
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="card m-3">
+            <div class="card-header">No active projects</div>
+            <div class="card-body">
+                <p class="card-text">
+                    Create a project using the sidebar to the right.
+                </p>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

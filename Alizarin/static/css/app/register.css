@@ -1,0 +1,33 @@
+#register-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("/static/image/background.jpg") center no-repeat;
+  background-size: cover;
+}
+
+ul.errors {
+  list-style-type: none;
+  padding-left: 0;
+  margin: .5rem 0 .5rem;
+}
+
+ul.errors li {
+  color: red;
+  font-size: 10pt;
+}
+
+#register-in-row {
+  border-radius: 10px;
+  background-color: white;
+}
+
+#register-in-header {
+  color: navy;
+  font-weight: 600;
+}
+
+
+.mt-7 {
+  margin-top: 7rem;
+}
